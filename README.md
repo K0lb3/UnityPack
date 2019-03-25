@@ -1,3 +1,18 @@
+# Intro
+A modified version of UnityPack with the goal of making the export and convertion of assets easier and more straightforward.
+
+### Additions
+* ETC/ETC2 decompression added (from RichardGale)
+
+### Changes
+* Decrunch moved into the property image_data
+* Image fixes (flip, channels of some formarts reordered)
+
+### Planned
+* automated extraction of all assets within a folder
+* image export helpers for unimplemeted types
+* decrunch fix for ETC2_?_crunched
+
 # UnityPack
 [![Build Status](https://api.travis-ci.org/HearthSim/UnityPack.svg?branch=master)](https://travis-ci.org/HearthSim/UnityPack)
 
