@@ -87,6 +87,8 @@ class MeshData:
 	def extract_vertices(self):
 		# unity 5+ has 8 channels (6 otherwise)
 		v5_channel_count = 8
+		# unity 2018 has 14 channels
+		v2018_channel_count = 14
 		buf = BinaryReader(BytesIO(self.mesh.vertex_data.data))
 		channels = self.mesh.vertex_data.channels
 		# actual streams attribute 'm_Streams' may only exist in unity 4,
@@ -110,20 +112,25 @@ class MeshData:
 						elif j == 1:
 							self.normals.append(OBJVector3().read(buf))
 						elif j == 2:
+							if channel_count == v2018_channel_count:
+								self.tangents.append(OBJVector4().read(buf))
+							else:
+								self.colors.append(OBJVector4().read_color(buf))
 							self.colors.append(OBJVector4().read_color(buf))
 						elif j == 3:
 							self.uv1.append(OBJVector2().read(buf))
 						elif j == 4:
 							self.uv2.append(OBJVector2().read(buf))
 						elif j == 5:
-							if channel_count == v5_channel_count:
+							if channel_count == v5_channel_count or channel_count == v2018_channel_count:
 								self.uv3.append(OBJVector2().read(buf))
 							else:
 								self.tangents.append(OBJVector4().read(buf))
 						elif j == 6:  # for unity 5+
 							self.uv4.append(OBJVector2().read(buf))
 						elif j == 7:  # for unity 5+
-							self.tangents.append(OBJVector4().read(buf))
+							if channel_count == v5_channel_count:
+								self.tangents.append(OBJVector4().read(buf))
 			# TODO investigate possible alignment here, after each stream
 
 	def get_num_streams(self, channels):
