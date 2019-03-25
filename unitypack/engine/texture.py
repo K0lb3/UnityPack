@@ -190,6 +190,7 @@ class Texture2D(Texture):
 
 		return Image.frombytes(mode, size, data, codec, args)
 
+			channels = (channels[2],channels[1],channels[0],channels[3])
 
 class StreamingInfo(Object):
 	offset = field("offset")
