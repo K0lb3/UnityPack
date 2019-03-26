@@ -899,6 +899,10 @@ class ETC2Decoder(ImageFile.PyDecoder):
 	ETC2_RGB = 45
 	ETC2_RGBA1 = 46
 	ETC2_RGBA8 = 47
+	ETC_RGB4_3DS = 60
+	ETC_RGBA8_3DS = 61
+	ETC_RGB4Crunched = 64
+	ETC2_RGBA8Crunched = 65
 
 	srcETC = None
 	dstImage = None
@@ -916,12 +920,14 @@ class ETC2Decoder(ImageFile.PyDecoder):
 
 		src = 0
 
+		print(srcFormat)
+
 		if srcFormat == ETC2Decoder.ETC_RGB4 or srcFormat == ETC2Decoder.ETC2_RGB:
 			self.dstChannelBytes = 1
 			self.dstChannels = 3
 			alphaFormat = 0
 
-		elif srcFormat == ETC2Decoder.ETC2_RGBA8:
+		elif srcFormat == ETC2Decoder.ETC2_RGBA8 or srcFormat == ETC2Decoder.ETC2_RGBA8Crunched:
 			self.dstChannelBytes = 1
 			self.dstChannels = 4
 			alphaFormat = 8

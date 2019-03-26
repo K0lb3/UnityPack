@@ -21,6 +21,10 @@ IMPLEMENTED_FORMATS = (
 	TextureFormat.ETC2_RGB,
 	TextureFormat.ETC2_RGBA1,
 	TextureFormat.ETC2_RGBA8,
+	TextureFormat.ETC_RGB4_3DS,
+	TextureFormat.ETC_RGBA8_3DS,
+	TextureFormat.ETC_RGB4Crunched,
+	TextureFormat.ETC2_RGBA8Crunched,
 )
 
 
@@ -91,14 +95,8 @@ class Texture2D(Texture):
 		if self.stream_data and self.stream_data.asset:
 			if not hasattr(self, "_data"):
 				self._data = self.stream_data.get_data()
-			data =  self._data
-		data = self.data
-		
-		from decrunch import File as CrunchFile
-		if self.format in (TextureFormat.DXT1Crunched, TextureFormat.DXT5Crunched, TextureFormat.ETC_RGB4Crunched, TextureFormat.ETC2_RGBA8Crunched):
-			data = CrunchFile(data).decode_level(0)
-		return data
-		
+			return  self._data
+		return self.data
 
 	@property
 	def image(self):
@@ -112,6 +110,9 @@ class Texture2D(Texture):
 		data = self.image_data
 
 		# Pillow wants bytes, not bytearrays
+		from decrunch import File as CrunchFile
+		if self.format in (TextureFormat.DXT1Crunched, TextureFormat.DXT5Crunched, TextureFormat.ETC_RGB4Crunched, TextureFormat.ETC2_RGBA8Crunched):
+			data = CrunchFile(data).decode_level(0)
 		data = bytes(data)
 
 		if not data and size == (0, 0):

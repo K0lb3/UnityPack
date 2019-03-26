@@ -97,6 +97,10 @@ class TextureFormat(IntEnum):
 			return "RGB"
 		elif self == TextureFormat.ETC2_RGB:
 			return "RGB"
+		elif self == TextureFormat.ETC_RGB4_3DS:
+			return "RGB"
+		elif self == TextureFormat.ETC_RGB4Crunched:
+			return "RGB"
 		return "RGBA"
 
 	@property
