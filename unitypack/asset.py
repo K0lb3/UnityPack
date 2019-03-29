@@ -8,7 +8,7 @@ from uuid import UUID
 from .object import ObjectInfo
 from .type import TypeMetadata
 from .utils import BinaryReader
-
+from .export import AssetExporter
 
 class Asset:
 	@classmethod
@@ -169,6 +169,8 @@ class Asset:
 				ret.append("\t" + repr(child))
 		return "\n".join(ret)
 
+	def export(self,path):
+		AssetExporter(self,path)
 
 class AssetRef:
 	def __init__(self, source):

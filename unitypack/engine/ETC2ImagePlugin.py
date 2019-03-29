@@ -892,7 +892,7 @@ class ETC2Decoder(ImageFile.PyDecoder):
 
 	def readBigEndian4byteWord(self, src):
 		s = struct.unpack("BBBB", self.srcETC.read(4))
-		pBlock = (s[0] << 24) | (s[1] << 16) | (s[2] << 8) | s[3];
+		pBlock = (s[0] << 24) | (s[1] << 16) | (s[2] << 8) | s[3]
 		return pBlock
 
 	ETC_RGB4 = 34
@@ -920,14 +920,12 @@ class ETC2Decoder(ImageFile.PyDecoder):
 
 		src = 0
 
-		print(srcFormat)
-
-		if srcFormat == ETC2Decoder.ETC_RGB4 or srcFormat == ETC2Decoder.ETC2_RGB:
+		if srcFormat in [ ETC2Decoder.ETC_RGB4, ETC2Decoder.ETC2_RGB, ETC2Decoder.ETC_RGB4_3DS, ETC2Decoder.ETC_RGB4Crunched ]:
 			self.dstChannelBytes = 1
 			self.dstChannels = 3
 			alphaFormat = 0
 
-		elif srcFormat == ETC2Decoder.ETC2_RGBA8 or srcFormat == ETC2Decoder.ETC2_RGBA8Crunched:
+		elif srcFormat in [ ETC2Decoder.ETC_RGBA8_3DS, ETC2Decoder.ETC2_RGBA8, ETC2Decoder.ETC2_RGBA8Crunched ]:
 			self.dstChannelBytes = 1
 			self.dstChannels = 4
 			alphaFormat = 8
@@ -938,6 +936,7 @@ class ETC2Decoder(ImageFile.PyDecoder):
 			alphaFormat = 1
 
 		else:
+			print (srcFormat)
 			exit(0)  # Upper levels should be passing only one of the above srcFormats.
 
 		# active_{width,height} show how many pixels contain active data,

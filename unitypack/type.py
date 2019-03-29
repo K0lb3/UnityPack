@@ -114,6 +114,7 @@ class TypeMetadata:
 		if format is None:
 			format = self.asset.format
 		self.generator_version = buf.read_string()
+		
 		self.target_platform = RuntimePlatform(buf.read_uint())
 
 		if format >= 13:

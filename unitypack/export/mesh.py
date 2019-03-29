@@ -1,7 +1,6 @@
+import pickle
 from io import BytesIO
-
-from .utils import BinaryReader
-
+from unitypack.utils import BinaryReader
 
 class OBJVector2:
 	def __init__(self, x=0, y=0):

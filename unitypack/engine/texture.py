@@ -1,8 +1,9 @@
-import logging
+import logging,sys
 from PIL import Image, ImageOps
 from .object import Object, field
 from .ETC2ImagePlugin import ETC2Decoder
 from .enums import TextureFormat
+from .texture_external import processUnimplementedTexture2D
 
 IMPLEMENTED_FORMATS = (
 	TextureFormat.Alpha8,
@@ -35,6 +36,24 @@ class Sprite(Object):
 	rd = field("m_RD")
 	rect = field("m_Rect")
 	pixels_per_unit = field("m_PixelsToUnits")
+
+	@property
+	def box(self):
+		return (
+			self.rd['textureRect']['x'],
+			self.rd['textureRect']['y'],
+			self.rd['textureRect']['x'] + self.rd['textureRect']['width'],
+			self.rd['textureRect']['y'] + self.rd['textureRect']['height']
+			)
+
+	def image(self,texture=None):
+		'''
+		Extracts the sprite from its texture.
+		If no texture is given, then it will be extracted.
+		'''
+		if not texture:
+			texture = self.rd['texture'].object.read().image()
+		return ImageOps.flip(ImageOps.flip(texture).crop(self.box))
 
 
 class Material(Object):
@@ -98,13 +117,29 @@ class Texture2D(Texture):
 			return  self._data
 		return self.data
 
-	@property
 	def image(self):
-		from PIL import Image
-
+		#	cached ?
+		image = getattr(self,'_image',False)
+		if image:
+			return image
+		
+		#	implemented?
 		if self.format not in IMPLEMENTED_FORMATS:
-			raise NotImplementedError("Unimplemented format %r" % (self.format))
+			#use external tools to extract image
+			if sys.platform != 'win32':
+				print('Unimplemented image type.')
+				return None
+			try:
+				self._image = processUnimplementedTexture2D(self)
+				return self._image
+			except NotImplementedError:
+				raise NotImplementedError("Unimplemented format %r" % (self.format))
+			except Exception as e:
+				print('Error during external extraction\n%s'%e)
+				return None
 
+		#	extraction of implemented image
+		from PIL import Image
 		mode = "RGB" if self.format.pixel_format in ("RGB", "RGB16") else "RGBA"
 		size = (self.width, self.height)
 		data = self.image_data
@@ -115,7 +150,7 @@ class Texture2D(Texture):
 			data = CrunchFile(data).decode_level(0)
 		data = bytes(data)
 
-		if not data and size == (0, 0):
+		if not data or size == (0, 0):
 			return None
 
 		# Image from bytes
@@ -151,6 +186,7 @@ class Texture2D(Texture):
 			channels = (channels[2],channels[1],channels[0],channels[3])
 
 		if len(channels) == 3:
-			return Image.merge("RGB", channels)
+			self._image = Image.merge("RGB", channels)
 		else:
-			return Image.merge("RGBA", channels)
+			self._image = Image.merge("RGBA", channels)
+		return self._image

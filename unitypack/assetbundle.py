@@ -5,7 +5,7 @@ from io import BytesIO
 from .asset import Asset
 from .enums import CompressionType
 from .utils import BinaryReader, lz4_decompress
-
+from .export import BundleExporter
 
 SIGNATURE_RAW = "UnityRaw"
 SIGNATURE_WEB = "UnityWeb"
@@ -134,6 +134,10 @@ class AssetBundle:
 
 		# Hacky
 		self.name = self.assets[0].name
+
+
+	def export(self,path):
+		BundleExporter(self,path)
 
 
 class ArchiveBlockInfo:
