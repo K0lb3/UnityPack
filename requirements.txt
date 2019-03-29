@@ -1,0 +1,4 @@
+git+https://github.com/K0lb3/UnityPack.git
+Pillow
+fsb5
+lz4
