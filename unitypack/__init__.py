@@ -1,6 +1,6 @@
 import pkg_resources
 
-
+from .unityfolder import UnityFolder, BundleExporter, AssetExporter
 #__version__ = pkg_resources.require("unitypack")[0].version
 
 

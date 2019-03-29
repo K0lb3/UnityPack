@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import os
 import unitypack
-from unitypack.export import listFiles, BundleExporter, AssetExporter
-from unitypack.asset import Asset
+from .export import listFiles, BundleExporter, AssetExporter
+from .asset import Asset
 from shutil import copy2
 
 class UnityFolder:
