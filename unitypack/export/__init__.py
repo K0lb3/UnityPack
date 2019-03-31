@@ -1,6 +1,7 @@
 import json, os
 import pickle
 from .shared import listFiles, getAvailableFileName, NameExtension
+from PIL import Image
 
 class BundleExporter():
 	def __init__(self, bundle, destFolder, adjust_path=True, no_sprite_texture=True, auto_start=True):
@@ -26,7 +27,7 @@ class BundleExporter():
 					pass
 					#print(str(asset))
 
-			if obj_types in [['Sprite','Texture2D'],['Texture2D','Sprite']]:
+			if len(obj_types) == 1 or obj_types in [['Sprite','Texture2D'],['Texture2D','Sprite']]:
 				destFolder = os.path.dirname(destFolder)
 
 		if auto_start:
@@ -189,5 +190,7 @@ class AssetExporter():
 				img = obj.read().image()
 			else:
 				img = data.image()
+			if not img:
+				img = Image()
 			self._cache[_id] = img
 			return img

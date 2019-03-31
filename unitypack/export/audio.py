@@ -2,7 +2,8 @@ import fsb5
 import subprocess
 import os
 import shutil
-from .shared import LocalPath,tempPath,listFiles,getAvailableFileName
+import tempfile
+from .shared import LocalPath,listFiles,getAvailableFileName
 # from unitypack.utils import extract_audioclip_samples
 ####	PATHS
 HCAtoWAVPath = os.path.join(LocalPath, *['external','vgmstream',"test.exe"])	#	hca to wav
@@ -66,6 +67,7 @@ def extract_audioclip_samples(d) -> dict:
 
 
 def StreamingAssetsConvertion(origFolder,destFolder=False):
+	tempPath=tempfile.gettempdir()
 	if destFolder==False:
 		destFolder=origFolder
 
