@@ -41,19 +41,7 @@ class UnityFolder:
 			for fp,f in files.items():
 				fin = os.path.join(self.indir, fp)
 				fout = os.path.join(self.outdir, f['outpath'])
-				if f['type'] == 'bundle':
-					f = open(fin,'rb')
-					b = unitypack.load(f)
-					BundleExporter(b,destFolder=self.outdir)
-					f.close()
-				elif f['type'] == 'asset':
-					f = open(fin,'rb')
-					a = Asset.from_file(a)
-					AssetExporter(a,destFolder=self.outdir)
-					f.close()
-				else:
-					os.makedirs(os.path.dirname(fout),exist_ok=True)
-					copy2(fin,fout)
+				ExportFile(fin,fout,f['type'])
 		else:
 			for fp in listFiles(self.indir):
 				fin = os.path.join(self.indir, fp)
@@ -61,25 +49,45 @@ class UnityFolder:
 					fout =  os.path.join(self.outdir, outdir_convention(fp))
 				else:
 					fout = os.path.join(self.outdir, fp)
-				typ = check_file_type(fin)
-				if typ == 'bundle':
-					f = open(fin,'rb')
-					b = unitypack.load(f)
-					BundleExporter(b,destFolder=fout)
-					f.close()
-				elif typ == 'asset':
-					f = open(fin,'rb')
-					a = Asset.from_file(a)
-					AssetExporter(a,destFolder=fout)
-					f.close()
-				else:
-					os.makedirs(os.path.dirname(fout),exist_ok=True)
-					copy2(fin,fout)
+				ExportFile(fin,fout)
 
+
+def ExportFile(fp,fout,typ=False):
+	'''
+	fp = filepath or filestream,
+	fout = dest file path,
+	typ (optional) = bundle/asset/False~copy
+	'''
+	if type(fp)==str:
+		f=open(fp,'rb')
+	else:
+		f=fp
+
+	if not typ:
+		typ=check_file_type(f)
+
+	if typ == 'bundle':
+		b = unitypack.load(f)
+		BundleExporter(b,destFolder=fout)
+	elif typ == 'asset':
+		a = Asset.from_file(a)
+		AssetExporter(a,destFolder=fout)
+	else:
+		os.makedirs(os.path.dirname(fout),exist_ok=True)
+		if type(fp) == str:
+			copy2(fp,fout)
+		else:
+			open(fout,'wb').write(fp.read())
+			fp.seek(0)
+	if type(fp)==str:
+		f.close()
 
 
 def check_file_type(fp):
-	f=open(fp,'rb')
+	if type(fp)==str:
+		f=open(fp,'rb')
+	else:
+		f=fp
 
 	#	file type check
 	firstChars = bytearray(f.read(12))
@@ -97,5 +105,7 @@ def check_file_type(fp):
 			ret = 'asset'
 		except:
 			ret = 'raw'
-	f.close()
+
+	if type(fp)==str:
+		f.close()
 	return ret

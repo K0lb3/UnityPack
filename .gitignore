@@ -1,4 +1,6 @@
-__init__.py
 __pycache__/
 *.py[cod]
 *$py.class
+build/
+unitypack.egg-info/
+dist/
