@@ -1,4 +1,5 @@
 import json, os
+import pickle
 from .shared import listFiles, getAvailableFileName, NameExtension
 
 class BundleExporter():
@@ -44,7 +45,10 @@ class AssetExporter():
 		auto_start ~ starts self.extract()
 		no_sprite_texture = removes textures which holds sprites
 		'''
-		self.obj = asset.objects
+		try:
+			self.obj = asset.objects
+		except:
+			self.obj={}
 		self._cache={}
 		self.destFolder = destFolder
 		self.no_sprite_texture = no_sprite_texture
@@ -113,8 +117,19 @@ class AssetExporter():
 
 
 	def Mesh(self,obj):
-		from .mesh import ProcessMesh
-		ProcessMesh(obj.read(),self.destFolder)
+		from .mesh import OBJMesh
+		data=obj.read()
+		try:
+			outputFile = getAvailableFileName(self.destFolder,data.name,"obj")
+			mesh_data = OBJMesh(data).export()
+			with open(outputFile, "w", encoding='utf-8') as meshFile:
+				meshFile.write(mesh_data)
+		except NotImplementedError as e:
+			#print("WARNING: Could not extract %r (%s)"%(data,e))
+			meshdata=pickle.dumps(data._obj)
+			outputFile = getAvailableFileName(self.destFolder,data.name,".Mesh.pickle")
+			with open(outputFile, "wb") as meshFile:
+				meshFile.write(meshdata)
 
 
 	def MovieTexture(self,obj):
