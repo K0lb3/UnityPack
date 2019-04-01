@@ -49,7 +49,7 @@ class UnityFolder:
 				fout =  os.path.join(self.outdir, outdir_convention(fp))
 			else:
 				fout = os.path.join(self.outdir, fp)
-			MTH.queue.put((ExportFile,{'fp':fin,'fp':fout}))
+			MTH.queue.put((ExportFile,{'fp':fin,'fout':fout}))
 		MTH.RunThreads()
 
 
@@ -79,7 +79,7 @@ class UnityFolder:
 				ExportFile(fin,fout)
 
 
-def ExportFile(fp,fout,typ=False):
+def ExportFile(fp='',fout='',typ=False):
 	'''
 	fp = filepath or filestream,
 	fout = dest file path,
