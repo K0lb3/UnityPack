@@ -87,6 +87,10 @@ def ExportFile(fp='',fout='',typ=False):
 	'''
 	if type(fp)==str:
 		f=open(fp,'rb')
+	elif type(fp) in [bytes,bytearray]:
+		import tempfile
+		f=tempfile.SpooledTemporaryFile()
+		f.write(fp)
 	else:
 		f=fp
 
@@ -104,8 +108,8 @@ def ExportFile(fp='',fout='',typ=False):
 		if type(fp) == str:
 			copy2(fp,fout)
 		else:
-			open(fout,'wb').write(fp.read())
-			fp.seek(0)
+			open(fout,'wb').write(f.read())
+			f.seek(0)
 	if type(fp)==str:
 		f.close()
 
