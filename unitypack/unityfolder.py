@@ -101,7 +101,7 @@ def ExportFile(fp='',fout='',typ=False):
 		b = unitypack.load(f)
 		BundleExporter(b,destFolder=fout)
 	elif typ == 'asset':
-		a = Asset.from_file(a)
+		a = Asset.from_file(f)
 		AssetExporter(a,destFolder=fout)
 	else:
 		os.makedirs(os.path.dirname(fout),exist_ok=True)
