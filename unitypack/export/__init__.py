@@ -28,7 +28,9 @@ class BundleExporter():
 					#print(str(asset))
 
 			if len(obj_types) == 1 or obj_types in [['Sprite','Texture2D'],['Texture2D','Sprite']]:
-				destFolder = os.path.dirname(destFolder)
+				self.destFolder = os.path.dirname(destFolder)
+
+		print(self.destFolder)
 
 		if auto_start:
 			self.export()
@@ -145,7 +147,8 @@ class AssetExporter():
 		outputFile = getAvailableFileName(self.destFolder, data.name, "png")
 		self.used_texture2ds.append(data.rd['texture'])
 		texture = self.getTexture(data.rd['texture'].object)
-		data.image(texture).save(outputFile)
+		if texture:
+			data.image(texture).save(outputFile)
 
 
 	def TextAsset(self, obj, extension='txt'):
@@ -159,7 +162,9 @@ class AssetExporter():
 	def Texture2D(self,obj):
 		data = obj.read()
 		outputFile = getAvailableFileName(self.destFolder, data.name, "png")
-		self.getTexture(obj,data).save(outputFile)
+		tex = self.getTexture(obj,data)
+		if tex:
+			tex.save(outputFile)
 
 
 	def RawFile(self,obj):
@@ -190,7 +195,5 @@ class AssetExporter():
 				img = obj.read().image()
 			else:
 				img = data.image()
-			if not img:
-				img = Image()
 			self._cache[_id] = img
 			return img

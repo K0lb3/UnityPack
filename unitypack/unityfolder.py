@@ -4,6 +4,7 @@ import unitypack
 from .export import listFiles, BundleExporter, AssetExporter
 from .asset import Asset
 from shutil import copy2
+from .SimpleMultiThread import MultiThreadHandler
 
 class UnityFolder:
 	FORMAT_ARGS = {
@@ -22,6 +23,7 @@ class UnityFolder:
 		self.debug = debug
 		self.files={}
 
+
 	def list_files(self):
 		self.files={}
 		self.types={'bundle':[],'asset':[],'raw':[]}
@@ -31,7 +33,32 @@ class UnityFolder:
 			self.files[fp]={'outpath':fp,'type':typ}
 			
 
-	def export(self,typ=None,outdir_convention=None):
+	def export(self,typ=None,outdir_convention=None, threads=8):
+		'''
+		typ ~ only bundle/asset/raw
+		outdir_convetion ~ outdir renaming function
+		threads ~ number of threads used, 0 - none for debugging
+		'''
+		if threads==0:
+			self.export_debug(typ=typ,outdir_convention=outdir_convention)
+
+		MTH = MultiThreadHandler()
+		for fp in listFiles(self.indir):
+			fin = os.path.join(self.indir, fp)
+			if outdir_convention:
+				fout =  os.path.join(self.outdir, outdir_convention(fp))
+			else:
+				fout = os.path.join(self.outdir, fp)
+			MTH.queue.put((ExportFile,{'fp':fin,'fp':fout}))
+		MTH.RunThreads()
+
+
+	def export_debug(self,typ=None,outdir_convention=None):
+		'''
+		typ ~ only bundle/asset/raw
+		outdir_convetion ~ outdir renaming function
+		threads ~ number of threads used, 0 - none for debugging
+		'''
 		if self.files:
 			if typ:
 				files = {fp:self.files[fp] for fp in self.types[typ]}
