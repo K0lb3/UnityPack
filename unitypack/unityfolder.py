@@ -88,9 +88,9 @@ def ExportFile(fp='',fout='',typ=False):
 	if type(fp)==str:
 		f=open(fp,'rb')
 	elif type(fp) in [bytes,bytearray]:
-		import tempfile
-		f=tempfile.SpooledTemporaryFile()
-		f.write(fp)
+		from io import BytesIO
+		f = BytesIO(fp)
+		setattr(f,'name',os.path.basename(fout))
 	else:
 		f=fp
 

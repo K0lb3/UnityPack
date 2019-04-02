@@ -12,8 +12,11 @@ class BundleExporter():
 		no_sprite_texture = removes textures which holds sprites
 		auto_start = starts export on creation
 		'''
+		try:
+			self.assets = bundle.assets
+		except:
+			self.assets = []
 
-		self.assets = bundle.assets
 		self.destFolder = destFolder
 
 		if adjust_path:
@@ -25,12 +28,9 @@ class BundleExporter():
 							obj_types.append(obj.type)
 				except:
 					pass
-					#print(str(asset))
 
 			if len(obj_types) == 1 or obj_types in [['Sprite','Texture2D'],['Texture2D','Sprite']]:
 				self.destFolder = os.path.dirname(destFolder)
-
-		print(self.destFolder)
 
 		if auto_start:
 			self.export()
@@ -39,6 +39,7 @@ class BundleExporter():
 	def export(self):
 		for asset in self.assets:
 			AssetExporter(asset,self.destFolder)
+
 
 class AssetExporter():
 	def __init__(self,asset, destFolder, auto_start=True, no_sprite_texture=True):
@@ -52,6 +53,7 @@ class AssetExporter():
 			self.obj = asset.objects
 		except:
 			self.obj={}
+
 		self._cache={}
 		self.destFolder = destFolder
 		self.no_sprite_texture = no_sprite_texture
@@ -168,14 +170,16 @@ class AssetExporter():
 
 
 	def RawFile(self,obj):
-		data=obj.read()
+		try:
+			data=obj.read()
+		except:
+			return
 		name = getattr(data,'name',False)
 		if not name:
 			name=obj.type
 		bts = getattr(data,'bytes',getattr(data,'data',False))
 
 		if bts:
-			#print(self.destFolder, name)
 			outputfile = getAvailableFileName(self.destFolder,*NameExtension(name,'.dat'))
 			if type(bts)==str:
 				bts=bts.encode('utf8')
