@@ -2,6 +2,7 @@ import fsb5
 import subprocess
 import os
 import shutil
+import sys
 import tempfile
 from .shared import LocalPath,listFiles,getAvailableFileName
 # from unitypack.utils import extract_audioclip_samples
@@ -67,6 +68,9 @@ def extract_audioclip_samples(d) -> dict:
 
 
 def StreamingAssetsConvertion(origFolder,destFolder=False):
+	if sys.platform != 'win32':
+		print('Skipping audio conversion, only possible on windows atm')
+		return
 	tempPath=tempfile.gettempdir()
 	if destFolder==False:
 		destFolder=origFolder
