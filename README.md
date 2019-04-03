@@ -1,5 +1,5 @@
 # Intro
-A modified version of UnityPack with the goal of making the export and convertion of assets easier and more straightforward.
+A modified version of UnityPack with the goal of making the export and conversion of assets easier and more straightforward.
 
 ### Additions
 * native ETC/ETC2 decompression added (by RichardGale)
