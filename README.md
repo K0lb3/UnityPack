@@ -13,7 +13,7 @@ A modified version of UnityPack with the goal of making the export and conversio
 * image and box (area in texture) added to Sprites
 
 ### Changes
-* texture fixes (flip, channels of some formarts reordered)
+* texture fixes (flip, channels of some formats reordered)
 * sprite and texture image property became a function (to avoid unnessary image creation)
 
 ### Planned
