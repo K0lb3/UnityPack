@@ -20,9 +20,5 @@ A modified version of UnityPack with the goal of making the export and convertio
 * awb and acb converter (to wav and mp3)
 
 
-## Dependencies
-* [python-lz4](https://github.com/python-lz4/python-lz4) (For UnityFS-compressed files)
-* [modified decrunch](https://github.com/K0lb3/decrunch) (for various ETC and ETC2 support)
-
 # UnityPack
 * [original unitypack](https://github.com/HearthSim/UnityPack)
