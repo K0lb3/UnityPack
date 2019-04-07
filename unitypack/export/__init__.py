@@ -129,7 +129,7 @@ class AssetExporter():
 			mesh_data = OBJMesh(data).export()
 			with open(outputFile, "w", encoding='utf-8') as meshFile:
 				meshFile.write(mesh_data)
-		except NotImplementedError as e:
+		except Exception as e:
 			#print("WARNING: Could not extract %r (%s)"%(data,e))
 			meshdata=pickle.dumps(data._obj)
 			outputFile = getAvailableFileName(self.destFolder,data.name,".Mesh.pickle")
