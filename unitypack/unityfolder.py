@@ -120,22 +120,26 @@ def check_file_type(fp):
 	else:
 		f=fp
 
-	#	file type check
-	firstChars = bytearray(f.read(12))
-	f.seek(0)
 
-	def IfFirstChars(text):
-		return firstChars[:len(text)] == bytearray(text.encode())
+	ret = 'raw'
+	try:
+		#	file type check
+		firstChars = bytearray(f.read(12))
+		f.seek(0)
 
-	if IfFirstChars("UnityFS") or IfFirstChars("UnityWeb") or IfFirstChars("UnityRaw") or IfFirstChars("UnityArchive"):
-		ret = 'bundle'
-	else:
-		try:
+		def IfFirstChars(text):
+			return firstChars[:len(text)] == bytearray(text.encode())
+
+		
+		if IfFirstChars("UnityFS") or IfFirstChars("UnityWeb") or IfFirstChars("UnityRaw") or IfFirstChars("UnityArchive"):
+			ret = 'bundle'
+		else:
 			asset = Asset.from_file(f)
-			asset.objects
+			for _id,obj in asset.objects:
+				pass
 			ret = 'asset'
-		except:
-			ret = 'raw'
+	except:
+		pass
 
 	if type(fp)==str:
 		f.close()
