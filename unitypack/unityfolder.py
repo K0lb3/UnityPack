@@ -117,8 +117,9 @@ def ExportFile(fp='',fout='',typ=False):
 def check_file_type(fp):
 	if type(fp)==str:
 		f=open(fp,'rb')
-	else:
-		f=fp
+	elif type(fp) in [bytes,bytearray]:
+		from io import BytesIO
+		f= BytesIO(fp)
 
 
 	ret = 'raw'
@@ -134,8 +135,9 @@ def check_file_type(fp):
 		if IfFirstChars("UnityFS") or IfFirstChars("UnityWeb") or IfFirstChars("UnityRaw") or IfFirstChars("UnityArchive"):
 			ret = 'bundle'
 		else:
+			from unitypack.asset import Asset
 			asset = Asset.from_file(f)
-			for _id,obj in asset.objects:
+			for _id,obj in asset.objects.items():
 				pass
 			ret = 'asset'
 	except:
