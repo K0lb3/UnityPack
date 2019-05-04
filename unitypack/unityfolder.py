@@ -120,7 +120,8 @@ def check_file_type(fp):
 	elif type(fp) in [bytes,bytearray]:
 		from io import BytesIO
 		f= BytesIO(fp)
-
+	else:
+		f = fp
 
 	ret = 'raw'
 	try:
@@ -140,7 +141,7 @@ def check_file_type(fp):
 			for _id,obj in asset.objects.items():
 				pass
 			ret = 'asset'
-	except:
+	except Exception as e:
 		pass
 
 	if type(fp)==str:
