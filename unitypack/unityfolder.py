@@ -4,7 +4,8 @@ import unitypack
 from .export import listFiles, BundleExporter, AssetExporter
 from .asset import Asset
 from shutil import copy2
-from .SimpleMultiThread import MultiThreadHandler
+#from .SimpleMultiThread import MultiThreadHandler
+from .SimpleMultiProcess import MultiThreadHandler
 
 class UnityFolder:
 	FORMAT_ARGS = {
@@ -108,6 +109,7 @@ def ExportFile(fp='',fout='',typ=False):
 		if type(fp) == str:
 			copy2(fp,fout)
 		else:
+			f.seek(0)
 			open(fout,'wb').write(f.read())
 			f.seek(0)
 	if type(fp)==str:
